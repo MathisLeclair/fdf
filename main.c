@@ -1,16 +1,3 @@
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mleclair <mleclair@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/01/24 20:01:09 by mleclair          #+#    #+#             */
-/*   Updated: 2017/01/26 13:19:13 by mleclair         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "fdf.h"
 
 void	draw_line(int x, int y, int a, int b, t_env *ev)
@@ -28,7 +15,7 @@ void	draw_line(int x, int y, int a, int b, t_env *ev)
 	else
 	{
 		i = y <= b ? y - 1 : b - 1;
-		while (++i <= (y <= b ? y : b))
+		while (++i <= (y <= b ? b : y))
 			mlx_pixel_put(ev->mlx, ev->win, i * (x - a) / (y - b) - (b * x - a * y) / (y - b), i, 0255255000);
 	}
 }
@@ -39,7 +26,7 @@ int		fdfinit(t_env *ev)
 	ev->zoom = 10;
 	ev->roty = 1;
 	ev->roty = 1;
-	draw_line(200,100,100,500,ev);
+	draw_line(100, 100, 200, 100, ev);
 	return (1);
 }
 
@@ -117,19 +104,14 @@ int		main(int ac, char **av)
 	ev->mlx = mlx_init();
 	ev->win = mlx_new_window(ev->mlx, 1280, 720, "test");
 	ev->array = get_map(ev->fd, i);
-	// i = 0;
-	(void)ac;
-	// while (ev->array[i])
-	// {
-	// 	printf("%s\n", ev->array[i][0]);
-	// 	++i;
-	// }
-	// if (ac == 2)
-	// {
-	// 	mlx_loop_hook(ev->mlx, init, 0);
-	// 	mlx_key_hook(ev->win, init, 0);
-	// 	mlx_loop(ev->mlx);
-	// }
-	// else
-	// 	error(-1);
+	if (ac == 2)
+	{
+		draw_line(50, 10, 200, 10, ev);
+		draw_line(200, 10, 200, 100, ev);
+		mlx_loop_hook(ev->mlx, fdfinit, ev);
+		mlx_key_hook(ev->win, fdfinit, ev);
+		mlx_loop(ev->mlx);
+	}
+	else
+		error(-1);
 }

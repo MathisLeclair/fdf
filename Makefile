@@ -1,18 +1,4 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mleclair <mleclair@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2017/01/24 17:10:11 by mleclair          #+#    #+#              #
-#    Updated: 2017/01/26 14:44:41 by mleclair         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = FdF
-
-# PATH = 
 
 PATHTOMAKEFILE = ./libft/
 
@@ -34,7 +20,7 @@ $(NAME): $(OBJ)
 	@echo "|           sub compilation :          |"
 	@echo "|               libft                  |"
 	@make -C $(PATHTOMAKEFILE)
-	@gcc -Wall -Werror -L ./libft/ -lft -Wextra -g $(OBJ) -lmlx -framework OpenGL -framework AppKit
+	@gcc -o $(NAME) -Wall -Werror -L ./libft/ -lft -Wextra -g $(OBJ) -lmlx -framework OpenGL -framework AppKit
 	@echo "|                 FIN                  |"
 	@echo "----------------------------------------"
 	@echo "               ________"
