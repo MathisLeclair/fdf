@@ -1,22 +1,44 @@
 #include "fdf.h"
 
-void	draw_line(float x, float y, float a, float b, t_env *ev)
+int		colorline(float i)
+{
+	if (i < -300)
+		return(0x000099);
+	else if (i < -150)
+		return (0x0000FF);
+	else if (i < -50)
+		return (0x33CCFF);
+	else if (i < 0)
+		return (0x66FFFF);
+	else if (i == 0)
+		return (0xFFFF66);
+	else if (i > 50)
+		return (0x99FF33);
+	else if (i > 100)
+		return (0x336600);
+	else if (i > 150)
+		return (0x663300);
+	else
+		return (0xFFFFFF);
+}
+
+void	draw_line(float *pts1, float *pts2, t_env *ev)
 {
 	float i;
 
-	if (x == a && y == b)
-		mlx_pixel_put(ev->mlx, ev->win, x, y, 0xFFFFFF);
-	else if (fabsf(x - a) >= fabsf(y - b))
+	if (pts1[0] == pts2[0] && pts1[1] == pts2[1])
+		mlx_pixel_put(ev->mlx, ev->win, pts1[0], pts1[1], colorline(pts1[2]));
+	else if (fabsf(pts1[0] - pts2[0]) >= fabsf(pts1[1] - pts2[1]))
 	{
-		i = x <= a ? x - 1 : a - 1;
-		while (++i <= (x <= a ? a : x))
-			mlx_pixel_put(ev->mlx, ev->win, i, i * (y - b) / (x - a) + (b * x - a * y) / (x - a), 0xFFFFFF);
+		i = pts1[0] <= pts2[0] ? pts1[0] - 1 : pts2[0] - 1;
+		while (++i <= (pts1[0] <= pts2[0] ? pts2[0] : pts1[0]))
+			mlx_pixel_put(ev->mlx, ev->win, i, i * (pts1[1] - pts2[1]) / (pts1[0] - pts2[0]) + (pts2[1] * pts1[0] - pts2[0] * pts1[1]) / (pts1[0] - pts2[0]), colorline(pts1[2]));
 	}
 	else
 	{
-		i = y <= b ? y - 1 : b - 1;
-		while (++i <= (y <= b ? b : y))
-			mlx_pixel_put(ev->mlx, ev->win, i * (x - a) / (y - b) - (b * x - a * y) / (y - b), i, 0xFFFFFF);
+		i = pts1[1] <= pts2[1] ? pts1[1] - 1 : pts2[1] - 1;
+		while (++i <= (pts1[1] <= pts2[1] ? pts2[1] : pts1[1]))
+			mlx_pixel_put(ev->mlx, ev->win, i * (pts1[0] - pts2[0]) / (pts1[1] - pts2[1]) - (pts2[1] * pts1[0] - pts2[0] * pts1[1]) / (pts1[1] - pts2[1]), i, colorline(pts1[2]));
 	}
 }
 
@@ -33,28 +55,49 @@ int		fdfinit(t_env *ev)
 	int x;
 	int y;
 	int i;
+	float pts1[3];
+	float pts2[3];
+	double mx;
+	double my;
 
 	y = 0;
-	i = 100;
+	i = 0;
 	while (ev->array[y])
 	{
 		x = 0;
 		while (ev->array[y][x])
 		{
-//			set x y a et b et ne pas les afficher si en dehors de la map
-			if (ev->array[y][x + 1])
-				draw_line((x + ev->tx + 0.12 * i) * ev->zoom, (y + ev->ty + 0.12
-				* i) * ev->zoom - ft_atoi(ev->array[y][x]) * ev->p * 10 /
-				ev->len, (x + ev->tx + 1 + 0.12 * i) * ev->zoom, (y + ev->ty +
-				0.12 * i) * ev->zoom - ft_atoi(ev->array[y][x + 1]) * ev->p * 10
-				/ ev->len, ev);
-			if (ev->array[y + 1] && ev->array[y + 1][x])
-				draw_line((x + ev->tx + 0.12 * i) * ev->zoom, (y + ev->ty + 0.12
-				* i) * ev->zoom - ft_atoi(ev->array[y][x]) * ev->p * 10 /
-				ev->len, (x + ev->tx + 0.12 * (i - 1)) * ev->zoom, (y + ev->ty +
-				0.12 * (i - 1) + 1) * ev->zoom - ft_atoi(ev->array[y + 1][x]) *
-				ev->p * 10 / ev->len, ev);
-			++x;
+			if ((mx = (x + ev->tx + 0.12 * i) * ev->zoom) <= -(ev->winx /
+				ev->len) || mx >= ev->winx)
+				++x;
+			else if ((my = (y + ev->ty + 0.12 * i) * ev->zoom) <= -(ev->winy /
+					ev->len) || my >= ev->winx)
+				++x;
+			else
+			{
+				if (ev->array[y][x + 1] && my <= ev->winy * 2 && my >= -200)
+				{
+					pts1[0] = mx;
+					pts1[1] = my - ft_atoi(ev->array[y][x]) * ev->p * 10 / ev->len;
+					pts1[2] = ft_atoi(ev->array[y][x]);
+					pts2[0] = (x + ev->tx + 1 + 0.12 * i) * ev->zoom;
+					pts2[1] = my - ft_atoi(ev->array[y][x + 1]) * ev->p * 10 / ev->len;
+					pts2[2] = ft_atoi(ev->array[y][x + 1]);
+					draw_line(pts1, pts2, ev);
+				}
+				if (ev->array[y + 1] && ev->array[y + 1][x] && my <= ev->winy
+					* 2 && my >= -200)
+				{
+					pts1[0] = mx;
+					pts1[1] = my - ft_atoi(ev->array[y][x]) * ev->p * 10 / ev->len;
+					pts1[2] = ft_atoi(ev->array[y][x]);
+					pts2[0] = (x + ev->tx + 0.12 * (i - 1)) * ev->zoom;
+					pts2[1] = (y + ev->ty + 0.12 * (i - 1) + 1) * ev->zoom - ft_atoi(ev->array[y + 1][x]) * ev->p * 10 / ev->len;
+					pts2[2] = ft_atoi(ev->array[y + 1][x]);
+					draw_line(pts1, pts2, ev);
+				}
+				++x;
+			}
 		}
 		++y;
 		--i;
@@ -78,18 +121,17 @@ int		get_arraysize(int fd)
 	return (i);
 }
 
-char	***get_map(int fd, int len)
+char	***get_map(int fd, int len, int i)
 {
 	char	***map;
 	char	**split;
 	char	*line;
 	int		pre_len;
-	int		i;
 
 	map = palloc(sizeof(char **) * (len + 1));
 	map[len] = 0;
-	i = 0;
 	pre_len = 0;
+	split = NULL;
 	while (get_next_line(fd, &line))
 	{
 		split = ft_strsplit(line, ' ');
@@ -103,6 +145,8 @@ char	***get_map(int fd, int len)
 		++i;
 		free(line);
 	}
+	if (!split)
+		error(LEN_LINE);
 	return (map);
 }
 
@@ -119,17 +163,10 @@ void	initev(t_env *ev)
 	ev->zoom = 50;
 	ev->winx = ev->len * 86;
 	ev->winy = ev->len * 43;
-	if (ev->winx > 2560)
-		ev->winx = 2560;
-	if (ev->winy > 1440)
-		ev->winy = 1440;
-}
-
-int		fdfclean(t_env *ev)
-{
-	mlx_clear_window(ev->mlx, ev->win);
-	fdfinit(ev);
-	return (0);
+	ev->winx = (ev->winx > 2560 ? 2560 : ev->winx);
+	ev->winy = (ev->winy > 1440 ? 1440 : ev->winy);
+	ev->winx = (ev->winx < 960 ? 960 : ev->winx);
+	ev->winy = (ev->winy < 540 ? 540 : ev->winy);
 }
 
 int		main(int ac, char **av)
@@ -143,13 +180,13 @@ int		main(int ac, char **av)
 	if((ev->fd = open(av[1], O_RDONLY)) == -1)
 		error(-2);
 	initev(ev);
-	ev->array = get_map(ev->fd, ev->len);
+	ev->array = get_map(ev->fd, ev->len, 0);
 	ev->mlx = mlx_init();
 	ev->win = mlx_new_window(ev->mlx, ev->winx, ev->winy, "test");
 	if (ac == 2)
 	{
 		mlx_key_hook(ev->win, keymap, ev);
-		mlx_expose_hook(ev->win, fdfclean, ev);
+		mlx_expose_hook(ev->win, fdfinit, ev);
 		mlx_loop(ev->mlx);
 	}
 	else
