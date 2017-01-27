@@ -29,6 +29,8 @@ typedef struct	s_env
 	int		zoom;
 	int		winx;
 	int		winy;
+	int		max;
+	int		min;
 }				t_env;
 
 /*
