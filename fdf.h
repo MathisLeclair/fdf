@@ -9,6 +9,7 @@
 # include <sys/uio.h>
 # include "./libft/libft.h"
 # include <mlx.h>
+# include <math.h>
 
 # define BUFF_SIZE 32
 # define LEN_LINE 20
@@ -19,9 +20,15 @@ typedef struct	s_env
 	void	*win;
 	int		fd;
 	char	***array;
-	int		rotx;
-	int		roty;
+	int		tx;
+	int		ty;
+	int		rx;
+	int		ry;
+	int		p;
+	int		len;
 	int		zoom;
+	int		winx;
+	int		winy;
 }				t_env;
 
 /*
@@ -42,5 +49,7 @@ int				keymap(int keycode, t_env *ev);
 
 
 char		**ft_strsplitquote(char const *s, char c, char tab);
+
+int		fdfinit(t_env *ev);
 
 #endif

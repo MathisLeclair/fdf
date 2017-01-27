@@ -9,7 +9,7 @@ void	error(int i)
 	else if (i == -3)
 		ft_putstr("malloc error, please hang yourself\n");
 	else if (i == LEN_LINE)
-		ft_putstr("Map error : missing dot(s), ARSEHOLE.\n");
+		ft_putstr("Map error : missing point(s), ARSEHOLE.\n");
 	exit(-1);
 }
 
