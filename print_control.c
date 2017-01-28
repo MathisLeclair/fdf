@@ -1,40 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getmap.c                                           :+:      :+:    :+:   */
+/*   print_control.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mleclair <mleclair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/01/26 15:52:54 by mleclair          #+#    #+#             */
-/*   Updated: 2017/01/28 12:42:09 by mleclair         ###   ########.fr       */
+/*   Created: 2017/01/28 12:37:23 by mleclair          #+#    #+#             */
+/*   Updated: 2017/01/28 12:37:34 by mleclair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-char	***ft_getmap(int fd, int len)
+int		printcontrol(t_env *ev)
 {
-	char	***map;
-	char	**split;
-	char	*line;
-	int		pre_len;
-	int		i;
-
-	map = malloc(sizeof(char **) * len + 1);
-	map[len] = 0;
-	i = 0;
-	pre_len = 0;
-	while (get_next_line(fd, &line))
-	{
-		split = ft_strsplit(line, ' ');
-		len = 0;
-		while (split[len])
-			++len;
-		if ((pre_len != 0 && pre_len != len) || len == 0)
-			error(LEN_LINE);
-		pre_len = len;
-		map[i] = split;
-		++i;
-	}
-	return (map);
+	mlx_string_put(ev->mlx, ev->win, 0, 0, 0xFF0000,
+		"ROTATION: (PAV NUM) 4 / 6 / 8 / 2");
+	mlx_string_put(ev->mlx, ev->win, 0, 20, 0xFF0000,
+		"TRANSLATION: ARROW (OR W / A / S / D)");
+	mlx_string_put(ev->mlx, ev->win, 0, 40, 0xFF0000,
+		"EXIT: ESC");
+	mlx_string_put(ev->mlx, ev->win, 0, 60, 0xFF0000,
+		"DEEPNESS : (PAV NUM) 7 / 9");
+	return (1);
 }

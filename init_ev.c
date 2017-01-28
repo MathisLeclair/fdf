@@ -1,40 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getmap.c                                           :+:      :+:    :+:   */
+/*   init_ev.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mleclair <mleclair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/01/26 15:52:54 by mleclair          #+#    #+#             */
-/*   Updated: 2017/01/28 12:42:09 by mleclair         ###   ########.fr       */
+/*   Created: 2017/01/28 12:36:29 by mleclair          #+#    #+#             */
+/*   Updated: 2017/01/28 12:36:48 by mleclair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-char	***ft_getmap(int fd, int len)
+void	initev(t_env *ev)
 {
-	char	***map;
-	char	**split;
-	char	*line;
-	int		pre_len;
-	int		i;
-
-	map = malloc(sizeof(char **) * len + 1);
-	map[len] = 0;
-	i = 0;
-	pre_len = 0;
-	while (get_next_line(fd, &line))
-	{
-		split = ft_strsplit(line, ' ');
-		len = 0;
-		while (split[len])
-			++len;
-		if ((pre_len != 0 && pre_len != len) || len == 0)
-			error(LEN_LINE);
-		pre_len = len;
-		map[i] = split;
-		++i;
-	}
-	return (map);
+	ev->mlx = NULL;
+	ev->win = NULL;
+	ev->array = NULL;
+	ev->tx = 0;
+	ev->ty = 0;
+	ev->rx = 0;
+	ev->ry = 0;
+	ev->p = 1;
+	ev->zoom = 50;
+	ev->winx = ev->len * 86;
+	ev->winy = ev->len * 43;
+	ev->winx = (ev->winx > 2560 ? 2560 : ev->winx);
+	ev->winy = (ev->winy > 1440 ? 1440 : ev->winy);
+	ev->winx = (ev->winx < 960 ? 960 : ev->winx);
+	ev->winy = (ev->winy < 540 ? 540 : ev->winy);
 }

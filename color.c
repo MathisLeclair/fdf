@@ -1,40 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   getmap.c                                           :+:      :+:    :+:   */
+/*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mleclair <mleclair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/01/26 15:52:54 by mleclair          #+#    #+#             */
-/*   Updated: 2017/01/28 12:42:09 by mleclair         ###   ########.fr       */
+/*   Created: 2017/01/28 12:18:36 by mleclair          #+#    #+#             */
+/*   Updated: 2017/01/28 12:38:40 by mleclair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-char	***ft_getmap(int fd, int len)
+int		colorline(float i)
 {
-	char	***map;
-	char	**split;
-	char	*line;
-	int		pre_len;
-	int		i;
-
-	map = malloc(sizeof(char **) * len + 1);
-	map[len] = 0;
-	i = 0;
-	pre_len = 0;
-	while (get_next_line(fd, &line))
-	{
-		split = ft_strsplit(line, ' ');
-		len = 0;
-		while (split[len])
-			++len;
-		if ((pre_len != 0 && pre_len != len) || len == 0)
-			error(LEN_LINE);
-		pre_len = len;
-		map[i] = split;
-		++i;
-	}
-	return (map);
+	if (i / 9 <= 0.1)
+		return (0x000099);
+	else if (i / 9 <= 0.2)
+		return (0x0000FF);
+	else if (i / 9 <= 0.25)
+		return (0x33CCFF);
+	else if (i / 9 <= 0.4)
+		return (0x66FFFF);
+	else if (i / 9 <= 1.5)
+		return (0xCCCC33);
+	else if (i / 9 <= 4)
+		return (0x339933);
+	else if (i / 9 <= 5.5)
+		return (0x336600);
+	else if (i / 9 <= 9)
+		return (0x663300);
+	else
+		return (0xFFFFFF);
 }

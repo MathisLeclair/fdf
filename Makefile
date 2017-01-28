@@ -6,7 +6,12 @@ FILE =	main \
 		error \
 		get_next_line \
 		keymap \
-		splitquote
+		splitquote \
+		fdfinit \
+		init_ev \
+		print_control \
+		drawline \
+		color
 
 OBJ  := $(addsuffix .o, $(FILE))
 

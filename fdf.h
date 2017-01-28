@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fdf.h                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mleclair <mleclair@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/01/28 12:37:45 by mleclair          #+#    #+#             */
+/*   Updated: 2017/01/28 13:15:16 by mleclair         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FDF_H
 # define FDF_H
 
@@ -33,25 +45,16 @@ typedef struct	s_env
 	int		min;
 }				t_env;
 
-/*
-** error.c
-*/
-
 void			error(int i);
 void			*palloc(size_t size);
-
-
-/*
-** getnextline
-*/
-
 int				get_next_line(const int fd, char **line);
-
 int				keymap(int keycode, t_env *ev);
-
-
-char		**ft_strsplitquote(char const *s, char c, char tab);
-
-int		fdfinit(t_env *ev);
+char			**ft_strsplitquote(char const *s, char c, char tab);
+int				fdfinit(t_env *ev);
+int				colorline(float i);
+int				printcontrol(t_env *ev);
+void			draw_line(float *pts1, float *pts2, t_env *ev);
+void			initev(t_env *ev);
+int				printcontrol(t_env *ev);
 
 #endif
